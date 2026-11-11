@@ -9,8 +9,8 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink)}
 header{background:var(--bg)}
-.catbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 16px 0;border-bottom:1px solid var(--line)}
-.brand{background:#1e3932;color:#fff;padding:14px 16px;font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;justify-content:space-between;align-items:center}
+.catbar{position:sticky;top:var(--bh,50px);z-index:5;background:var(--bg);padding:10px 16px 0;border-bottom:1px solid var(--line)}
+.brand{position:sticky;top:0;z-index:6;background:#1e3932;color:#fff;padding:14px 16px;font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;justify-content:space-between;align-items:center}
 .brand small{font-weight:500;font-size:13px;color:#d4e9e2}
 .hin{padding:14px 16px 0}
 .opts{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
@@ -63,6 +63,8 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
 .step .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#c9d1cd;color:#fff;font-size:14px}
 .step.cur{color:var(--acc)}.step.cur .num{background:var(--acc)}
 .step.done .num{background:#7fb59f}
+.stepsub{font-size:14px;color:var(--sub);margin:-2px 0 4px 32px}
+.item i{display:block;font-style:normal;font-size:14px;font-weight:600;color:var(--sub);margin-top:2px}
 .step em{font-style:normal;font-weight:500;color:var(--sub)}
 .glow{box-shadow:0 0 0 3px rgba(0,98,65,.35);border-color:var(--acc)!important}
 .guide{background:#d4e9e2;color:#1e3932;border-radius:12px;padding:10px 14px;font-size:15px;line-height:1.5;margin-bottom:12px}
@@ -112,8 +114,8 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
 
 </head>
 <body>
+<div class="brand" id="brand"><span>☕ 실천신학대학원 음료 주문(스타벅스)</span><small id="modeLbl"></small></div>
 <header>
-  <div class="brand"><span>☕ 실천신학대학원 음료 주문(스타벅스)</span><small id="modeLbl"></small></div>
   <div class="hin">
   <div class="top hide" id="adminTabs">
     <button id="tabOrder" class="on">주문하기</button>
@@ -129,7 +131,8 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
     <div class="opts">
       <div class="seg" id="szSeg"><button data-s="톨" class="on">톨</button><button data-s="그란데">그란데</button><button data-s="벤티">벤티</button></div>
     </div>
-    <div class="step" id="st3"><span class="num">3</span>메뉴를 고르세요 <em>· 빨강 HOT / 파랑 ICE</em></div>
+    <div class="step" id="st3"><span class="num">3</span>원하시는 메뉴를 눌러주세요</div>
+    <div class="stepsub">메뉴를 누르시면 주문 확인창이 나옵니다</div>
   </div>
   </div>
 </header>
@@ -175,16 +178,16 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymGernLsKgJaeevZDEz
 
 const B="HI", I="I", H="H";
 const MENU=[
- {cat:"에스프레소·커피",items:[["윈터 스카치 바닐라 라떼",B],["토피 넛 라떼",B],["블랙 글레이즈드 라떼",B],["스타벅스 자몽 허니 에어로카노",I],["스타벅스 에어로카노",I],["시그니처 코르타도",B],["밀크카라멜 라떼",B],["플랫 화이트",B],["카페 아메리카노",B],["카페 라떼",B],["바닐라 라떼",B],["스타벅스 돌체 라떼",B],["카페 모카",B],["카푸치노",B],["카라멜 마키아또",B],["화이트 초콜릿 모카",B],["커피 스타벅스 더블 샷",I],["바닐라 스타벅스 더블 샷",I],["헤이즐넛 스타벅스 더블 샷",I],["에스프레소",H],["에스프레소 마키아또",H],["에스프레소 콘 파나",H]]},
- {cat:"블론드",items:[["블론드 블랙 글레이즈드 라떼",B],["블론드 토피 넛 라떼",B],["블론드 윈터 스카치 바닐라 라떼",B],["블론드 스타벅스 자몽 허니 에어로카노",I],["블론드 스타벅스 에어로카노",I],["블론드 코르타도",B],["블론드 밀크카라멜 라떼",B],["블론드 플랫 화이트",B],["블론드 카페 아메리카노",B],["블론드 카페 라떼",B],["블론드 바닐라 라떼",B],["블론드 스타벅스 돌체 라떼",B],["블론드 카페 모카",B],["블론드 카푸치노",B],["블론드 카라멜 마키아또",B],["블론드 화이트 초콜릿 모카",B],["블론드 커피 스타벅스 더블 샷",I],["블론드 바닐라 스타벅스 더블 샷",I],["블론드 헤이즐넛 스타벅스 더블 샷",I],["블론드 에스프레소",H],["블론드 에스프레소 마키아또",H],["블론드 에스프레소 콘 파나",H]]},
- {cat:"디카페인",items:[["디카페인 토피 넛 라떼",B],["디카페인 윈터 스카치 바닐라 라떼",B],["디카페인 블랙 글레이즈드 라떼",B],["디카페인 스타벅스 자몽 허니 에어로카노",I],["디카페인 스타벅스 에어로카노",I],["디카페인 코르타도",B],["디카페인 밀크카라멜 라떼",B],["디카페인 플랫 화이트",B],["디카페인 카페 아메리카노",B],["디카페인 카페 라떼",B],["디카페인 바닐라 라떼",B],["디카페인 스타벅스 돌체 라떼",B],["디카페인 카페 모카",B],["디카페인 카푸치노",B],["디카페인 카라멜 마키아또",B],["디카페인 화이트 초콜릿 모카",B],["디카페인 커피 스타벅스 더블 샷",I],["디카페인 바닐라 스타벅스 더블 샷",I],["디카페인 헤이즐넛 스타벅스 더블 샷",I],["디카페인 에스프레소",H],["디카페인 에스프레소 마키아또",H],["디카페인 에스프레소 콘 파나",H]]},
- {cat:"1/2디카페인",items:[["1/2디카페인 토피 넛 라떼",B],["1/2디카페인 윈터 스카치 바닐라 라떼",B],["1/2디카페인 블랙 글레이즈드 라떼",B],["1/2디카페인 스타벅스 자몽 허니 에어로카노",I],["1/2디카페인 스타벅스 에어로카노",I],["1/2디카페인 코르타도",B],["1/2디카페인 밀크카라멜 라떼",B],["1/2디카페인 플랫 화이트",B],["1/2디카페인 카페 아메리카노",B],["1/2디카페인 카페 라떼",B],["1/2디카페인 바닐라 라떼",B],["1/2디카페인 스타벅스 돌체 라떼",B],["1/2디카페인 카페 모카",B],["1/2디카페인 카푸치노",B],["1/2디카페인 카라멜 마키아또",B],["1/2디카페인 화이트 초콜릿 모카",B],["1/2디카페인 커피 스타벅스 더블 샷",I],["1/2디카페인 바닐라 스타벅스 더블 샷",I],["1/2디카페인 헤이즐넛 스타벅스 더블 샷",I],["1/2디카페인 에스프레소",H],["1/2디카페인 에스프레소 마키아또",H],["1/2디카페인 에스프레소 콘 파나",H]]},
- {cat:"콜드 브루",items:[["바닐라 아인슈페너 콜드 브루",I],["프렌치 바닐라 콜드 브루",I],["바닐라 크림 콜드 브루",I],["돌체 콜드 브루",I],["콜드 브루",I]]},
- {cat:"오늘의 커피",items:[["스위트 밀크 커피",I],["브루드 커피",B]]},
- {cat:"프라푸치노·블렌디드",items:[["딸기 딜라이트 요거트 블렌디드",I],["블루베리 딜라이트 요거트 블렌디드",I],["자몽 허니 레몬 블렌디드",I],["망고 바나나 블렌디드",I],["자바 칩 프라푸치노",I],["더블 에스프레소 칩 프라푸치노",I],["초콜릿 크림 칩 프라푸치노",I],["카라멜 프라푸치노",I],["에스프레소 프라푸치노",I],["제주 말차 크림 프라푸치노",I]]},
- {cat:"티",items:[["클래식 뱅쇼 히비스커스 티",H],["살구 조이풀 메들리 티 라떼",B],["차이 티 라떼",B],["말차 글레이즈드 티 라떼",B],["호지 글레이즈드 티 라떼",B],["퓨어 말차",B],["퓨어 호지차",B],["복숭아 아이스 티",I],["스타벅스 클래식 밀크 티",B],["제주 말차 라떼",B],["유자 민트 티",B],["자몽 허니 블랙 티",B],["제주 녹차",B],["얼 그레이 티",B],["잉글리쉬 브렉퍼스트 티",B],["유스베리 티",B],["히비스커스 블렌드 티",B],["민트 블렌드 티",B],["캐모마일 블렌드 티",B]]},
- {cat:"피지오·리프레셔",items:[["핑크 피치 리프레셔",I],["쿨 라임 피지오",I],["피치 딸기 피지오",I],["체리&자두 에너지 피지오",I],["라이트 핑크 자몽 피지오",I],["딸기 아사이 레모네이드 스타벅스 리프레셔",I]]},
- {cat:"기타",items:[["스타벅스 딸기 라떼",I],["시그니처 핫 초콜릿",B],["스팀 우유",H],["우유",I]]}
+ {cat:"에스프레소·커피",items:[["카페 아메리카노",B],["카페 라떼",B],["밀크카라멜 라떼",B],["바닐라 라떼",B],["블랙 글레이즈드 라떼",B],["스타벅스 돌체 라떼",B],["시그니처 코르타도",B],["윈터 스카치 바닐라 라떼",B],["카라멜 마키아또",B],["카페 모카",B],["카푸치노",B],["토피 넛 라떼",B],["플랫 화이트",B],["화이트 초콜릿 모카",B],["바닐라 스타벅스 더블 샷",I],["스타벅스 에어로카노",I],["스타벅스 자몽 허니 에어로카노",I],["에스프레소",H],["에스프레소 마키아또",H],["에스프레소 콘 파나",H],["커피 스타벅스 더블 샷",I],["헤이즐넛 스타벅스 더블 샷",I]]},
+ {cat:"블론드",items:[["카페 아메리카노(블론드)",B],["카페 라떼(블론드)",B],["밀크카라멜 라떼(블론드)",B],["바닐라 라떼(블론드)",B],["블랙 글레이즈드 라떼(블론드)",B],["스타벅스 돌체 라떼(블론드)",B],["윈터 스카치 바닐라 라떼(블론드)",B],["카라멜 마키아또(블론드)",B],["카페 모카(블론드)",B],["카푸치노(블론드)",B],["코르타도(블론드)",B],["토피 넛 라떼(블론드)",B],["플랫 화이트(블론드)",B],["화이트 초콜릿 모카(블론드)",B],["바닐라 스타벅스 더블 샷(블론드)",I],["스타벅스 에어로카노(블론드)",I],["스타벅스 자몽 허니 에어로카노(블론드)",I],["에스프레소 마키아또(블론드)",H],["에스프레소 콘 파나(블론드)",H],["에스프레소(블론드)",H],["커피 스타벅스 더블 샷(블론드)",I],["헤이즐넛 스타벅스 더블 샷(블론드)",I]]},
+ {cat:"디카페인",items:[["카페 아메리카노(디카페인)",B],["카페 라떼(디카페인)",B],["밀크카라멜 라떼(디카페인)",B],["바닐라 라떼(디카페인)",B],["블랙 글레이즈드 라떼(디카페인)",B],["스타벅스 돌체 라떼(디카페인)",B],["윈터 스카치 바닐라 라떼(디카페인)",B],["카라멜 마키아또(디카페인)",B],["카페 모카(디카페인)",B],["카푸치노(디카페인)",B],["코르타도(디카페인)",B],["토피 넛 라떼(디카페인)",B],["플랫 화이트(디카페인)",B],["화이트 초콜릿 모카(디카페인)",B],["바닐라 스타벅스 더블 샷(디카페인)",I],["스타벅스 에어로카노(디카페인)",I],["스타벅스 자몽 허니 에어로카노(디카페인)",I],["에스프레소 마키아또(디카페인)",H],["에스프레소 콘 파나(디카페인)",H],["에스프레소(디카페인)",H],["커피 스타벅스 더블 샷(디카페인)",I],["헤이즐넛 스타벅스 더블 샷(디카페인)",I]]},
+ {cat:"1/2디카페인",items:[["카페 아메리카노(1/2디카페인)",B],["카페 라떼(1/2디카페인)",B],["밀크카라멜 라떼(1/2디카페인)",B],["바닐라 라떼(1/2디카페인)",B],["블랙 글레이즈드 라떼(1/2디카페인)",B],["스타벅스 돌체 라떼(1/2디카페인)",B],["윈터 스카치 바닐라 라떼(1/2디카페인)",B],["카라멜 마키아또(1/2디카페인)",B],["카페 모카(1/2디카페인)",B],["카푸치노(1/2디카페인)",B],["코르타도(1/2디카페인)",B],["토피 넛 라떼(1/2디카페인)",B],["플랫 화이트(1/2디카페인)",B],["화이트 초콜릿 모카(1/2디카페인)",B],["바닐라 스타벅스 더블 샷(1/2디카페인)",I],["스타벅스 에어로카노(1/2디카페인)",I],["스타벅스 자몽 허니 에어로카노(1/2디카페인)",I],["에스프레소 마키아또(1/2디카페인)",H],["에스프레소 콘 파나(1/2디카페인)",H],["에스프레소(1/2디카페인)",H],["커피 스타벅스 더블 샷(1/2디카페인)",I],["헤이즐넛 스타벅스 더블 샷(1/2디카페인)",I]]},
+ {cat:"콜드 브루",items:[["돌체 콜드 브루",I],["바닐라 아인슈페너 콜드 브루",I],["바닐라 크림 콜드 브루",I],["콜드 브루",I],["프렌치 바닐라 콜드 브루",I]]},
+ {cat:"오늘의 커피",items:[["브루드 커피",B],["스위트 밀크 커피",I]]},
+ {cat:"프라푸치노·블렌디드",items:[["더블 에스프레소 칩 프라푸치노",I],["딸기 딜라이트 요거트 블렌디드",I],["망고 바나나 블렌디드",I],["블루베리 딜라이트 요거트 블렌디드",I],["에스프레소 프라푸치노",I],["자몽 허니 레몬 블렌디드",I],["자바 칩 프라푸치노",I],["제주 말차 크림 프라푸치노",I],["초콜릿 크림 칩 프라푸치노",I],["카라멜 프라푸치노",I]]},
+ {cat:"티",items:[["말차 글레이즈드 티 라떼",B],["민트 블렌드 티",B],["살구 조이풀 메들리 티 라떼",B],["스타벅스 클래식 밀크 티",B],["얼 그레이 티",B],["유스베리 티",B],["유자 민트 티",B],["잉글리쉬 브렉퍼스트 티",B],["자몽 허니 블랙 티",B],["제주 녹차",B],["제주 말차 라떼",B],["차이 티 라떼",B],["캐모마일 블렌드 티",B],["클래식 뱅쇼 히비스커스 티",B],["퓨어 말차",B],["퓨어 호지차",B],["호지 글레이즈드 티 라떼",B],["히비스커스 블렌드 티",B],["복숭아 아이스 티",I]]},
+ {cat:"피지오·리프레셔",items:[["딸기 아사이 레모네이드 스타벅스 리프레셔",I],["라이트 핑크 자몽 피지오",I],["체리&자두 에너지 피지오",I],["쿨 라임 피지오",I],["피치 딸기 피지오",I],["핑크 피치 리프레셔",I]]},
+ {cat:"기타",items:[["시그니처 핫 초콜릿",B],["스타벅스 딸기 라떼",I],["스팀 우유",H],["우유",I]]}
 ];
 const ORDER=MENU.flatMap(c=>c.items.map(i=>i[0]));
 const SZ=["톨","그란데","벤티"];
@@ -219,12 +222,13 @@ function renderCats(){$("cats").innerHTML=MENU.map((c,i)=>`<button class="${i===
 function renderGrid(){
   const c=MENU[cat];let h="";
   c.items.forEach(([n,t],i)=>{
-    if(t.includes("H"))h+=`<button class="item HOT" data-i="${i}" data-t="HOT">${n}<b>HOT</b></button>`;
-    if(t.includes("I"))h+=`<button class="item ICE" data-i="${i}" data-t="ICE">${n}<b>ICE</b></button>`;
+    const m=n.match(/^(.*)\((.+)\)$/),nm=m?`<span>${m[1]}<i>${m[2]}</i></span>`:`<span>${n}</span>`;
+    if(t.includes("H"))h+=`<button class="item HOT" data-i="${i}" data-t="HOT">${nm}<b>HOT</b></button>`;
+    if(t.includes("I"))h+=`<button class="item ICE" data-i="${i}" data-t="ICE">${nm}<b>ICE</b></button>`;
   });
   $("grid").innerHTML=h;
 }
-$("cats").onclick=e=>{const b=e.target.closest("button");if(!b)return;cat=+b.dataset.i;renderCats();renderGrid();const t=$("catBar").offsetTop;if(window.scrollY>t)window.scrollTo({top:t})};
+$("cats").onclick=e=>{const b=e.target.closest("button");if(!b)return;cat=+b.dataset.i;renderCats();renderGrid();const t=$("orderView").getBoundingClientRect().top+window.scrollY-$("brand").offsetHeight-$("catBar").offsetHeight;if(window.scrollY>t)window.scrollTo({top:t})};
 $("szSeg").onclick=e=>{const b=e.target.closest("button");if(b){size=b.dataset.s;sizeTouched=true;paintOpts();paintSteps()}};
 $("name").addEventListener("input",paintSteps);
 $("name").addEventListener("keydown",e=>{if(e.key==="Enter")e.target.blur()});
@@ -371,6 +375,7 @@ function show(v){
   if(!o){renderSum();load()}
 }
 $("tabOrder").onclick=()=>show("order");$("tabSum").onclick=()=>show("sum");
+const setBh=()=>document.documentElement.style.setProperty("--bh",$("brand").offsetHeight+"px");setBh();window.addEventListener("resize",setBh);
 renderCats();renderGrid();paintSteps();setupAdmin();
 </script>
 </body>
