@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>단체 음료 주문</title>
+<title>실천신학대학원 음료 주문(스타벅스)</title>
 <style>
 :root{--bg:#f2f0eb;--ink:#1e3932;--sub:#6b7a75;--line:#dfe3e0;--acc:#006241;--acc2:#d4e9e2;--hot:#d93a32;--hotbg:#fdeeed;--ice:#1f6fd1;--icebg:#ebf3fd}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:var(--bg);color:var(--ink)}
-header{position:sticky;top:0;z-index:5;background:var(--bg);padding:0 0 0;border-bottom:1px solid var(--line)}
+header{background:var(--bg)}
+.catbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 16px 0;border-bottom:1px solid var(--line)}
 .brand{background:#1e3932;color:#fff;padding:14px 16px;font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;justify-content:space-between;align-items:center}
 .brand small{font-weight:500;font-size:13px;color:#d4e9e2}
 .hin{padding:14px 16px 0}
@@ -112,7 +113,7 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
 </head>
 <body>
 <header>
-  <div class="brand"><span>☕ 단체 음료 주문 · 스타벅스</span><small id="modeLbl"></small></div>
+  <div class="brand"><span>☕ 실천신학대학원 음료 주문(스타벅스)</span><small id="modeLbl"></small></div>
   <div class="hin">
   <div class="top hide" id="adminTabs">
     <button id="tabOrder" class="on">주문하기</button>
@@ -129,10 +130,10 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
       <div class="seg" id="szSeg"><button data-s="톨" class="on">톨</button><button data-s="그란데">그란데</button><button data-s="벤티">벤티</button></div>
     </div>
     <div class="step" id="st3"><span class="num">3</span>메뉴를 고르세요 <em>· 빨강 HOT / 파랑 ICE</em></div>
-    <div class="cats" id="cats"></div>
   </div>
   </div>
 </header>
+<div class="catbar" id="catBar"><div class="cats" id="cats"></div></div>
 <div id="setup" class="setup hide">저장소 주소가 설정되지 않았습니다.</div>
 <main>
   <div id="orderView"><div class="grid" id="grid"></div></div>
@@ -223,7 +224,7 @@ function renderGrid(){
   });
   $("grid").innerHTML=h;
 }
-$("cats").onclick=e=>{const b=e.target.closest("button");if(!b)return;cat=+b.dataset.i;renderCats();renderGrid()};
+$("cats").onclick=e=>{const b=e.target.closest("button");if(!b)return;cat=+b.dataset.i;renderCats();renderGrid();const t=$("catBar").offsetTop;if(window.scrollY>t)window.scrollTo({top:t})};
 $("szSeg").onclick=e=>{const b=e.target.closest("button");if(b){size=b.dataset.s;sizeTouched=true;paintOpts();paintSteps()}};
 $("name").addEventListener("input",paintSteps);
 $("name").addEventListener("keydown",e=>{if(e.key==="Enter")e.target.blur()});
@@ -366,7 +367,7 @@ $("sumView").addEventListener("click",async e=>{
 });
 function show(v){
   const o=v==="order";$("tabOrder").classList.toggle("on",o);$("tabSum").classList.toggle("on",!o);
-  $("orderView").classList.toggle("hide",!o);$("orderHead").classList.toggle("hide",!o);$("sumView").classList.toggle("hide",o);
+  $("orderView").classList.toggle("hide",!o);$("orderHead").classList.toggle("hide",!o);$("catBar").classList.toggle("hide",!o);$("sumView").classList.toggle("hide",o);
   if(!o){renderSum();load()}
 }
 $("tabOrder").onclick=()=>show("order");$("tabSum").onclick=()=>show("sum");
