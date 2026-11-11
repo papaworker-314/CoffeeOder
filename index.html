@@ -90,6 +90,7 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
 .cf-tags .HOT{color:var(--hot);background:var(--hotbg)}.cf-tags .ICE{color:var(--ice);background:var(--icebg)}.cf-tags .o{color:var(--acc);background:var(--acc2)}
 .cf-old{background:#f4f4f2;border-radius:10px;padding:10px 12px;font-size:15px;color:var(--sub);text-align:center;margin-bottom:14px}
 .mbox label{display:block;font-size:16px;font-weight:700;margin-bottom:6px}
+.altin{width:100%;font-size:17px;padding:12px;border:1px solid var(--line);border-radius:10px;margin-bottom:4px}
 .mbox textarea{height:76px;font-size:17px;margin-bottom:4px}
 .mbox .hint2{font-size:13px;color:var(--sub);margin:0 0 18px;line-height:1.5}
 .yn{display:flex;gap:10px}.yn button{flex:1;padding:18px;font-size:19px;font-weight:800;border-radius:14px;border:0}
@@ -123,10 +124,9 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
     <button class="mybtn" id="myBtn">✏️ 내 주문 확인 · 수정 · 취소</button>
     <div class="step" id="st1"><span class="num">1</span>이름을 입력하세요</div>
     <div class="namebar"><input id="name" placeholder="예: 홍길동" autocomplete="off"></div>
-    <div class="step" id="st2"><span class="num">2</span>사이즈를 고르세요 <em>(안 고르면 톨)</em></div>
+    <div class="step" id="st2"><span class="num">2</span>사이즈를 고르세요 <em>(안 고르면 톨사이즈)</em></div>
     <div class="opts">
       <div class="seg" id="szSeg"><button data-s="톨" class="on">톨</button><button data-s="그란데">그란데</button><button data-s="벤티">벤티</button></div>
-      <button class="szbtn" id="dc">디카페인</button>
     </div>
     <div class="step" id="st3"><span class="num">3</span>메뉴를 고르세요 <em>· 빨강 HOT / 파랑 ICE</em></div>
     <div class="cats" id="cats"></div>
@@ -147,8 +147,11 @@ textarea{width:100%;height:90px;font-size:14px;border:1px solid var(--line);bord
   <div class="cf-tags" id="cfTags"></div>
   <div class="cf-old hide" id="cfOld"></div>
   <label for="cfNote">추가 요청 <span style="font-weight:500;color:#888">(선택)</span></label>
-  <textarea id="cfNote" maxlength="100" placeholder="예: 샷 추가, 시럽 1번만, 오트 우유로 변경, 휘핑 빼기"></textarea>
-  <p class="hint2">원하는 옵션을 자유롭게 적어 주세요. 없으면 비워 두셔도 됩니다.<br>옵션에 따라 금액이 추가될 수 있습니다.</p>
+  <textarea id="cfNote" maxlength="60" placeholder="예: 샷 추가, 시럽 1번만, 오트 우유로 변경, 휘핑 빼기"></textarea>
+  <p class="hint2">원하는 옵션을 자유롭게 적어 주세요. 없으면 비워 두셔도 됩니다.</p>
+  <label for="cfAlt">이 메뉴가 없을 때 대신 받을 메뉴 <span style="font-weight:500;color:#888">(선택)</span></label>
+  <input id="cfAlt" class="altin" maxlength="30" placeholder="예: 카페 라떼 ICE">
+  <p class="hint2">품절 등으로 주문하신 메뉴가 없을 때 이 메뉴로 바꿔 드려요.</p>
   <div class="yn"><button class="no" id="cfNo">아니오</button><button class="yes" id="cfYes">예, 주문할게요</button></div>
 </div></div>
 
@@ -171,22 +174,26 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymGernLsKgJaeevZDEz
 
 const B="HI", I="I", H="H";
 const MENU=[
- {cat:"시즌",items:[["토피 넛 라떼",B],["윈터 스카치 바닐라 라떼",B],["블랙 글레이즈드 라떼",B],["말차 글레이즈드 티 라떼",B],["호지 글레이즈드 티 라떼",B],["살구 조이풀 메들리 티 라떼",B],["클래식 뱅쇼 히비스커스 티",H]]},
- {cat:"콜드 브루",items:[["콜드 브루",I],["바닐라 크림 콜드 브루",I],["돌체 콜드 브루",I]]},
- {cat:"에스프레소",items:[["카페 아메리카노",B],["에어로카노",I],["오늘의 커피",B],["카페 라떼",B],["카푸치노",B],["카라멜 마키아또",B],["스타벅스 돌체 라떼",B],["카페 모카",B],["화이트 초콜릿 모카",B],["에스프레소",H],["에스프레소 마키아또",H]]},
- {cat:"프라푸치노",items:[["자바 칩 프라푸치노",I],["더블 에스프레소 칩 프라푸치노",I],["카라멜 프라푸치노",I],["에스프레소 프라푸치노",I],["화이트 초콜릿 모카 프라푸치노",I],["초콜릿 크림 칩 프라푸치노",I],["제주 말차 크림 프라푸치노",I]]},
- {cat:"블렌디드",items:[["딸기 딜라이트 요거트 블렌디드",I],["망고 바나나 블렌디드",I],["망고 패션 티 블렌디드",I]]},
- {cat:"피지오·리프레셔",items:[["쿨 라임 피지오",I],["패션 탱고 티 레모네이드 피지오",I],["딸기 아사이 레모네이드 스타벅스 리프레셔",I]]},
- {cat:"티바나",items:[["자몽 허니 블랙 티",B],["유자 민트 티",B],["제주 말차 라떼",B],["차이 티 라떼",B],["얼 그레이 티",B],["잉글리쉬 브렉퍼스트 티",B],["캐모마일 블렌드 티",B],["민트 블렌드 티",B],["히비스커스 블렌드 티",B],["유스베리 티",B]]},
- {cat:"기타",items:[["시그니처 핫 초콜릿",B],["스팀 우유",H]]}
+ {cat:"에스프레소·커피",items:[["윈터 스카치 바닐라 라떼",B],["토피 넛 라떼",B],["블랙 글레이즈드 라떼",B],["스타벅스 자몽 허니 에어로카노",I],["스타벅스 에어로카노",I],["시그니처 코르타도",B],["밀크카라멜 라떼",B],["플랫 화이트",B],["카페 아메리카노",B],["카페 라떼",B],["바닐라 라떼",B],["스타벅스 돌체 라떼",B],["카페 모카",B],["카푸치노",B],["카라멜 마키아또",B],["화이트 초콜릿 모카",B],["커피 스타벅스 더블 샷",I],["바닐라 스타벅스 더블 샷",I],["헤이즐넛 스타벅스 더블 샷",I],["에스프레소",H],["에스프레소 마키아또",H],["에스프레소 콘 파나",H]]},
+ {cat:"블론드",items:[["블론드 블랙 글레이즈드 라떼",B],["블론드 토피 넛 라떼",B],["블론드 윈터 스카치 바닐라 라떼",B],["블론드 스타벅스 자몽 허니 에어로카노",I],["블론드 스타벅스 에어로카노",I],["블론드 코르타도",B],["블론드 밀크카라멜 라떼",B],["블론드 플랫 화이트",B],["블론드 카페 아메리카노",B],["블론드 카페 라떼",B],["블론드 바닐라 라떼",B],["블론드 스타벅스 돌체 라떼",B],["블론드 카페 모카",B],["블론드 카푸치노",B],["블론드 카라멜 마키아또",B],["블론드 화이트 초콜릿 모카",B],["블론드 커피 스타벅스 더블 샷",I],["블론드 바닐라 스타벅스 더블 샷",I],["블론드 헤이즐넛 스타벅스 더블 샷",I],["블론드 에스프레소",H],["블론드 에스프레소 마키아또",H],["블론드 에스프레소 콘 파나",H]]},
+ {cat:"디카페인",items:[["디카페인 토피 넛 라떼",B],["디카페인 윈터 스카치 바닐라 라떼",B],["디카페인 블랙 글레이즈드 라떼",B],["디카페인 스타벅스 자몽 허니 에어로카노",I],["디카페인 스타벅스 에어로카노",I],["디카페인 코르타도",B],["디카페인 밀크카라멜 라떼",B],["디카페인 플랫 화이트",B],["디카페인 카페 아메리카노",B],["디카페인 카페 라떼",B],["디카페인 바닐라 라떼",B],["디카페인 스타벅스 돌체 라떼",B],["디카페인 카페 모카",B],["디카페인 카푸치노",B],["디카페인 카라멜 마키아또",B],["디카페인 화이트 초콜릿 모카",B],["디카페인 커피 스타벅스 더블 샷",I],["디카페인 바닐라 스타벅스 더블 샷",I],["디카페인 헤이즐넛 스타벅스 더블 샷",I],["디카페인 에스프레소",H],["디카페인 에스프레소 마키아또",H],["디카페인 에스프레소 콘 파나",H]]},
+ {cat:"1/2디카페인",items:[["1/2디카페인 토피 넛 라떼",B],["1/2디카페인 윈터 스카치 바닐라 라떼",B],["1/2디카페인 블랙 글레이즈드 라떼",B],["1/2디카페인 스타벅스 자몽 허니 에어로카노",I],["1/2디카페인 스타벅스 에어로카노",I],["1/2디카페인 코르타도",B],["1/2디카페인 밀크카라멜 라떼",B],["1/2디카페인 플랫 화이트",B],["1/2디카페인 카페 아메리카노",B],["1/2디카페인 카페 라떼",B],["1/2디카페인 바닐라 라떼",B],["1/2디카페인 스타벅스 돌체 라떼",B],["1/2디카페인 카페 모카",B],["1/2디카페인 카푸치노",B],["1/2디카페인 카라멜 마키아또",B],["1/2디카페인 화이트 초콜릿 모카",B],["1/2디카페인 커피 스타벅스 더블 샷",I],["1/2디카페인 바닐라 스타벅스 더블 샷",I],["1/2디카페인 헤이즐넛 스타벅스 더블 샷",I],["1/2디카페인 에스프레소",H],["1/2디카페인 에스프레소 마키아또",H],["1/2디카페인 에스프레소 콘 파나",H]]},
+ {cat:"콜드 브루",items:[["바닐라 아인슈페너 콜드 브루",I],["프렌치 바닐라 콜드 브루",I],["바닐라 크림 콜드 브루",I],["돌체 콜드 브루",I],["콜드 브루",I]]},
+ {cat:"오늘의 커피",items:[["스위트 밀크 커피",I],["브루드 커피",B]]},
+ {cat:"프라푸치노·블렌디드",items:[["딸기 딜라이트 요거트 블렌디드",I],["블루베리 딜라이트 요거트 블렌디드",I],["자몽 허니 레몬 블렌디드",I],["망고 바나나 블렌디드",I],["자바 칩 프라푸치노",I],["더블 에스프레소 칩 프라푸치노",I],["초콜릿 크림 칩 프라푸치노",I],["카라멜 프라푸치노",I],["에스프레소 프라푸치노",I],["제주 말차 크림 프라푸치노",I]]},
+ {cat:"티",items:[["클래식 뱅쇼 히비스커스 티",H],["살구 조이풀 메들리 티 라떼",B],["차이 티 라떼",B],["말차 글레이즈드 티 라떼",B],["호지 글레이즈드 티 라떼",B],["퓨어 말차",B],["퓨어 호지차",B],["복숭아 아이스 티",I],["스타벅스 클래식 밀크 티",B],["제주 말차 라떼",B],["유자 민트 티",B],["자몽 허니 블랙 티",B],["제주 녹차",B],["얼 그레이 티",B],["잉글리쉬 브렉퍼스트 티",B],["유스베리 티",B],["히비스커스 블렌드 티",B],["민트 블렌드 티",B],["캐모마일 블렌드 티",B]]},
+ {cat:"피지오·리프레셔",items:[["핑크 피치 리프레셔",I],["쿨 라임 피지오",I],["피치 딸기 피지오",I],["체리&자두 에너지 피지오",I],["라이트 핑크 자몽 피지오",I],["딸기 아사이 레모네이드 스타벅스 리프레셔",I]]},
+ {cat:"기타",items:[["스타벅스 딸기 라떼",I],["시그니처 핫 초콜릿",B],["스팀 우유",H],["우유",I]]}
 ];
-const DCOK=new Set(["시즌","콜드 브루","에스프레소","프라푸치노"]);
 const ORDER=MENU.flatMap(c=>c.items.map(i=>i[0]));
 const SZ=["톨","그란데","벤티"];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const label=o=>`${esc(o.menu)}${o.temp?` <span class="tag ${o.temp}">${o.temp}</span>`:""} <span class="tag sz">${esc(o.size||"톨")}</span>${o.dc?' <span class="tag sz">디카페인</span>':""}${o.note?`<span class="note-t">요청: ${esc(o.note)}</span>`:""}`;
-const plain=o=>`${o.temp?o.temp+" ":""}${o.menu} ${o.size||"톨"}${o.dc?" 디카페인":""}${o.note?" ("+o.note+")":""}`;
+const SEP=" ‖품절시: ";
+const split=n=>{n=String(n||"");const i=n.indexOf(SEP);return i<0?{req:n,alt:""}:{req:n.slice(0,i),alt:n.slice(i+SEP.length)}};
+const join=(req,alt)=>req+(alt?SEP+alt:"");
+const label=o=>`${esc(o.menu)}${o.temp?` <span class="tag ${o.temp}">${o.temp}</span>`:""} <span class="tag sz">${esc(o.size||"톨")}</span>${o.dc?' <span class="tag sz">디카페인</span>':""}${(()=>{const x=split(o.note);return (x.req?`<span class="note-t">요청: ${esc(x.req)}</span>`:"")+(x.alt?`<span class="note-t">품절 시: ${esc(x.alt)}</span>`:"")})()}`;
+const plain=o=>`${o.temp?o.temp+" ":""}${o.menu} ${o.size||"톨"}${o.dc?" 디카페인":""}${(()=>{const x=split(o.note);return (x.req?" ("+x.req+")":"")+(x.alt?" [품절 시: "+x.alt+"]":"")})()}`;
 function toast(t){const el=$("toast");el.textContent=t;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),1800)}
 if(!SCRIPT_URL)$("setup").classList.remove("hide");
 
@@ -204,9 +211,9 @@ try{const n=localStorage.getItem("myName");if(n)$("name").value=n}catch(e){}
 
 // ---- 주문 화면 ----
 let cat=0,size="톨",dc=false,sizeTouched=false,busy=false,editing=null,pending=null;
-function paintOpts(){$("szSeg").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.s===size));$("dc").classList.toggle("on",dc)}
+function paintOpts(){$("szSeg").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.s===size))}
 function paintSteps(){const hasName=!!$("name").value.trim();const cur=!hasName?1:(!sizeTouched?2:3);[1,2,3].forEach(i=>{const el=$("st"+i);el.classList.toggle("cur",i===cur);el.classList.toggle("done",i<cur)});$("name").classList.toggle("glow",cur===1);$("szSeg").classList.toggle("glow",cur===2)}
-function resetOpts(){size="톨";dc=false;sizeTouched=false;paintOpts();paintSteps()}
+function resetOpts(){size="톨";sizeTouched=false;paintOpts();paintSteps()}
 function renderCats(){$("cats").innerHTML=MENU.map((c,i)=>`<button class="${i===cat?'on':''}" data-i="${i}">${c.cat}</button>`).join("")}
 function renderGrid(){
   const c=MENU[cat];let h="";
@@ -215,11 +222,9 @@ function renderGrid(){
     if(t.includes("I"))h+=`<button class="item ICE" data-i="${i}" data-t="ICE">${n}<b>ICE</b></button>`;
   });
   $("grid").innerHTML=h;
-  $("dc").classList.toggle("hide",!DCOK.has(c.cat));if(!DCOK.has(c.cat)){dc=false;paintOpts()}
 }
 $("cats").onclick=e=>{const b=e.target.closest("button");if(!b)return;cat=+b.dataset.i;renderCats();renderGrid()};
 $("szSeg").onclick=e=>{const b=e.target.closest("button");if(b){size=b.dataset.s;sizeTouched=true;paintOpts();paintSteps()}};
-$("dc").onclick=()=>{dc=!dc;paintOpts()};
 $("name").addEventListener("input",paintSteps);
 $("name").addEventListener("keydown",e=>{if(e.key==="Enter")e.target.blur()});
 
@@ -229,21 +234,21 @@ $("grid").onclick=e=>{
   const nm=$("name").value.trim();
   if(!nm){toast("① 이름을 먼저 입력하세요");$("name").focus();window.scrollTo({top:0,behavior:"smooth"});return}
   const c=MENU[cat];
-  pending={name:nm,menu:c.items[+b.dataset.i][0],temp:b.dataset.t,size,dc:dc&&DCOK.has(c.cat)?1:0,note:editing&&editing.menu===c.items[+b.dataset.i][0]?editing.note||"":""};
+  pending={name:nm,menu:c.items[+b.dataset.i][0],temp:b.dataset.t,size,dc:0,note:editing?editing.note||"":""};
   $("cfTitle").textContent=editing?"이렇게 수정할까요?":"이대로 주문할까요?";
   $("cfName").textContent=nm+" 님";
   $("cfMenu").textContent=pending.menu;
   $("cfTags").innerHTML=`<span class="${pending.temp}">${pending.temp}</span><span class="o">${pending.size}</span>${pending.dc?'<span class="o">디카페인</span>':""}`;
   $("cfOld").classList.toggle("hide",!editing);
   if(editing)$("cfOld").innerHTML="기존 주문: "+esc(plain(editing));
-  $("cfNote").value=pending.note;
+  {const x=split(pending.note);$("cfNote").value=x.req;$("cfAlt").value=x.alt}
   $("cfYes").textContent=editing?"예, 수정할게요":"예, 주문할게요";
   $("confirm").classList.add("show");
 };
 $("cfNo").onclick=()=>{$("confirm").classList.remove("show");pending=null};
 $("cfYes").onclick=async()=>{
   if(!pending||busy)return;
-  pending.note=$("cfNote").value.trim().slice(0,100);
+  pending.note=join($("cfNote").value.trim().slice(0,60),$("cfAlt").value.trim().slice(0,30));
   busy=true;$("cfYes").textContent="보내는 중…";$("confirm").classList.add("sending");
   try{
     let o;
@@ -300,7 +305,7 @@ $("mineList").addEventListener("click",async e=>{
 });
 function startEdit(o){
   editing=o;$("mine").classList.remove("show");
-  $("name").value=o.name;size=SZ.includes(o.size)?o.size:"톨";dc=!!o.dc;sizeTouched=true;paintOpts();paintSteps();
+  $("name").value=o.name;size=SZ.includes(o.size)?o.size:"톨";sizeTouched=true;paintOpts();paintSteps();
   const ci=MENU.findIndex(c=>c.items.some(i=>i[0]===o.menu));if(ci>=0){cat=ci;renderCats();renderGrid()}
   $("editTxt").textContent=`${o.name} 님 주문 수정 중 · 바꿀 메뉴를 누르세요`;
   $("editBar").classList.remove("hide");show("order");window.scrollTo({top:0,behavior:"smooth"});
